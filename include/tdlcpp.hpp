@@ -18,6 +18,7 @@
 
 #include <cstddef>
 #include <string>
+#include <stdexcept>
 
 extern "C" {
   #include <tdl.h>
@@ -34,7 +35,7 @@ namespace TDL {
     tdl_point_t point;
     
   public:
-    Point(int x, int y): point(tdl_point(x, y)) {}
+    Point(int x, int y);
 
     void setX(int x);
     void setY(int y);
@@ -51,7 +52,7 @@ namespace TDL {
     tdl_size_t size;
 
   public:
-    Size(size_t width, size_t height): size(tdl_size(width, height)) {}
+    Size(size_t width, size_t height);
 
     void setWidth(size_t width);
     void setHeight(size_t height);
@@ -66,9 +67,11 @@ namespace TDL {
     
   private:
     tdl_line_t line;
+    Point A;
+    Point B;
 
   public:
-    Line(Point a, Point b): line(tdl_line(a.point, b.point)) {}
+    Line(Point a, Point b);
 
     void setPointA(Point a);
     void setPointB(Point b);
@@ -82,12 +85,14 @@ namespace TDL {
 
   private:
     tdl_rectangle_t rectangle;
+    Point point;
+    Size size;
 
   public:
-    Rectangle(Point point, Size size): rectangle(tdl_rectangle(point.point, size.size)) {}
+    Rectangle(Point pt, Size sz);
 
-    void setPoint(Point point);
-    void setSize(Size size);
+    void setPoint(Point pt);
+    void setSize(Size sz);
 
     Point getPoint();
     Size getSize();
@@ -129,10 +134,11 @@ namespace TDL {
     
   private:
     tdl_point_color_t pointColor;
+    Color background;
+    Color foreground;
 
   public:
-    PointColor(Color bg, Color fg):
-      pointColor(tdl_point_color(static_cast<tdl_color_t>(bg), static_cast<tdl_color_t>(fg))) {}
+    PointColor(Color bg, Color fg);
 
     void setBackground(Color bg);
     void setForeground(Color fg);
@@ -146,13 +152,14 @@ namespace TDL {
     
   private:
     tdl_style_t style;
+    PointColor pointColor;
+    Attributes attributes;
 
   public:
-    Style(PointColor pointColor, Attributes attributes)
-      : style(tdl_style(pointColor.pointColor, static_cast<tdl_attributes_t>(attributes))) {}
+    Style(PointColor ptColor, Attributes attr);
 
-    void setPointColor(PointColor pointColor);
-    void setAttributes(Attributes attributes);
+    void setPointColor(PointColor ptColor);
+    void setAttributes(Attributes attr);
 
     PointColor getPointColor();
     Attributes getAttributes();
@@ -164,37 +171,44 @@ namespace TDL {
   private:
     tdl_text_t text;
     std::string cppstring;
+    Style style;
 
   public:
-    Text(std::string str, Style style): text(tdl_text(u8string((cstr)str.c_str()), style.style)) {}
 
-    bool setString(std::string str);
-    void setStyle(Style style);
+    Text(std::string str, Style st);
+    Text(const Text &txt);
+    
+    void setString(std::string str);
+    void setStyle(Style st);
 
     template<typename T>
     T getString();
     Style getStyle();
 
-    bool destroy();
+    void destroy();
     ~Text();
   };
 
   class Canvas {
   private:
     tdl_canvas_t *canvas;
+    Point cursor;
+    Size size;
     
   public:
-    Canvas(): canvas(tdl_canvas()) {}
+    Canvas();
 
-    bool setCursorPosition(Point point);
-    bool print(Text text);
-    bool display();
-    bool clear();
-    bool drawLine(Line line, Text text);
-    bool drawRectangle(Rectangle rectangle, Text text);
-    bool drawFilledRectangle(Rectangle rectangle, Text text);
-
-    bool destroy();
+    void setCursorPosition(Point point);
+    Point getCursorPosition();
+    Size getCanvasSize();
+    void print(const Text &text);
+    void display();
+    void clear();
+    void drawLine(Line line, const Text &text);
+    void drawRectangle(Rectangle rectangle, const Text &text);
+    void drawFilledRectangle(Rectangle rectangle, const Text &text);
+    
+    void destroy();
     ~Canvas();
   };
 

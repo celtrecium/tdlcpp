@@ -1,20 +1,33 @@
 #include <tdlcpp>
 #include <iostream>
+#include <chrono>
+#include <thread>
 
 int main() {
   TDL::Terminal::setAlternateScreen(true);
   TDL::Terminal::setCursor(false);
 
+  // Initialize canvas and text
   TDL::Canvas canv = TDL::Canvas();
-  
-  canv.setCursorPosition(TDL::Point(20, 5));
-  canv.print(TDL::Text("Hello world!",
-                       TDL::Style(TDL::PointColor(TDL::Color::Red, TDL::Color::BrightWhite),
-                                  TDL::Attributes::Bold | TDL::Attributes::Italic)));
+  TDL::Text hello = TDL::Text("Hello world!", TDL::Style(TDL::PointColor(TDL::Color::Red, TDL::Color::BrightWhite),
+                                                         TDL::Attributes::Bold | TDL::Attributes::Italic));
 
-  canv.display();
+  // Initialize point in the middle of the terminal width
+  TDL::Point point =
+    TDL::Point(static_cast<int>(((canv.getCanvasSize().getWidth()) - hello.getString<std::string>().length()) / 2), 0);
 
-  std::cin.get();
+  for (size_t i = 0; i < canv.getCanvasSize().getHeight() - 1; ++i) {
+    canv.clear();
+
+    point.setY(static_cast<int>(i));
+    canv.setCursorPosition(point);
+    canv.print(hello);
+
+    canv.display();
+
+    std::this_thread::sleep_for(std::chrono::microseconds(50000));
+  }
+
   
   TDL::Terminal::setAlternateScreen(false);
   TDL::Terminal::setCursor(true);
