@@ -102,6 +102,8 @@ namespace TDL {
     Dim           = TDL_DIM
   };
 
+  Attributes operator | (Attributes a1, Attributes a2);
+
   enum class Color {
     Black   = TDL_BLACK,
     Red     = TDL_RED,
@@ -195,4 +197,10 @@ namespace TDL {
     bool destroy();
     ~Canvas();
   };
+
+  namespace Terminal {
+    void clear();
+    void setAlternateScreen(bool isEnabled);
+    void setCursor(bool isEnabled);
+  }
 }

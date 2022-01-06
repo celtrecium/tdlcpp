@@ -17,6 +17,8 @@
  */
 
 #include "tdlcpp.hpp"
+#include <tdl/tdl_style.h>
+#include <tdl/tdl_terminal.h>
 
 // Class Point
 
@@ -70,6 +72,11 @@ TDL::PointColor TDL::Style::getPointColor() {
 }
 
 
+TDL::Attributes TDL::operator | (TDL::Attributes a1, TDL::Attributes a2) {
+  return static_cast<TDL::Attributes>(static_cast<tdl_attributes_t>(a1) | static_cast<tdl_attributes_t>(a2));
+}
+
+
 TDL::Attributes TDL::Style::getAttributes() { return static_cast<Attributes>(this->style.attributes); }
 
 // Class Text
@@ -117,3 +124,9 @@ bool TDL::Canvas::drawFilledRectangle(Rectangle rectangle, Text text) {
 
 bool TDL::Canvas::destroy() { return tdl_destroy_canvas(this->canvas); }
 TDL::Canvas::~Canvas() { destroy(); }
+
+// Namespace Terminal
+
+void TDL::Terminal::clear() { tdl_terminal_clear(); }
+void TDL::Terminal::setAlternateScreen(bool isEnabled) { tdl_terminal_set_alternate_screen(isEnabled); }
+void TDL::Terminal::setCursor(bool isEnabled) { tdl_terminal_set_cursor(isEnabled); }
