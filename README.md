@@ -10,9 +10,6 @@ In the directory with sources run:
 ## Build `demo`
 In the directory with sources run `make`
 
-## TODO
-* A class with methods for working with the terminal
-
 ## Dependencies
 * [libu8string](https://github.com/celtrecium/libu8string)
 * [libsbvector](https://github.com/celtrecium/libsbvector)
