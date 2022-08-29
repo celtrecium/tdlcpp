@@ -174,6 +174,8 @@ void TDL::Canvas::print(const Text &text) {
   
   if(!tdl_print(this->canvas, text.text))
     throw std::runtime_error("Failed to print the text on the canvas");
+
+  this->cursor = TDL::Point(this->canvas->cursor.x, this->canvas->cursor.y);
 }
 
 void TDL::Canvas::display() {
