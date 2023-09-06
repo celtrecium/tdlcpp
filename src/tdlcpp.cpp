@@ -17,6 +17,9 @@
  */
 
 #include "tdlcpp.hpp"
+#include <tdl/tdl_char.h>
+#include <tdl/tdl_shapes.h>
+#include <u8string.h>
 
 // Class Point
 
@@ -189,17 +192,18 @@ void TDL::Canvas::clear() {
 }
 
 void TDL::Canvas::drawLine(Line line, const Text &text) {
-  if(!tdl_draw_line(this->canvas, text.text, line.line))
+  if(!tdl_draw_line(this->canvas, tdl_char(text.text.string.string[0], text.text.style), line.line))
     throw std::runtime_error("Failed to draw the line on the canvas");
 }
 
 void TDL::Canvas::drawRectangle(Rectangle rectangle, const Text &text) {
-  if(!tdl_draw_rectangle(this->canvas, text.text, rectangle.rectangle))
+  if(!tdl_draw_rectangle(this->canvas, tdl_char(text.text.string.string[0], text.text.style), rectangle.rectangle))
     throw std::runtime_error("Failed to draw the rectangle on the canvas");
 }
 
 void TDL::Canvas::drawFilledRectangle(Rectangle rectangle, const Text &text) {
-  if(!tdl_draw_filled_rectangle(this->canvas, text.text, rectangle.rectangle))
+  if(!tdl_draw_filled_rectangle(this->canvas,
+      tdl_char(text.text.string.string[0], text.text.style), rectangle.rectangle))
     throw std::runtime_error("Failed to draw the rectangle on the canvas");
 }
 
